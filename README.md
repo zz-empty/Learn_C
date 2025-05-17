@@ -1,7 +1,12 @@
-# Repo-Learning
+# Repo-Learning  
 学习新东西的地方，语言、工具等
 
-# Language
+# Language  
 C
 C++
-Python
+Python  
+
+
+# Tool  
+Makefile
+shell  
