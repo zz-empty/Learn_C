@@ -7,6 +7,6 @@ C++
 Python  
 
 
-# Tool  
-Makefile
-shell  
+# C
+1. 九九乘法表               ”练习循环、控制边界
+2. 打印菱形、空心菱形       
