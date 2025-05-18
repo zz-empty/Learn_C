@@ -29,7 +29,7 @@ void selectSort(int *arr, int len) {
     }
 }
 
-//生成一个动态分配的数组
+//生成一个指定数量的动态分配的数组
 int *create_random_array(int len) {
     //生成一个随机数组
     srand(time(NULL)); 
