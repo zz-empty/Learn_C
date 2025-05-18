@@ -3,8 +3,8 @@
 #include <time.h>
 
 #define MAX_LEN 100
-#define N 10
-#define M 50
+#define N 15
+#define M 30
 #define SWAP(a, b) {int tmp = a; a = b; b = tmp;}
 
 void print_array_int(int *arr, int len) {
@@ -27,37 +27,12 @@ void selectSort(int *arr, int len) {
     }
 }
 
-int main()
-{
-    //在两个有序的数组中找到公共元素
-    /* int arr1[] = {3, 4, 7, 9, 10, 14, 38, 39, 45}; */
-    /* int arr2[] = {1, 4, 8, 9, 17, 34, 38, 49, 45, 57, 68}; */
-
-    //生成两个随机数组, 并初始化
-    srand(time(NULL)); 
-    int *arr1 = (int*)malloc(N * sizeof(int));
-    int *arr2 = (int*)malloc(N * sizeof(int));
-    for (int i = 0; i < N; ++i) {
-        arr1[i] = rand() % M;
-        arr2[i] = rand() % M;
-    }
-
-    //对两个数组升序排列
-    selectSort(arr1, N);
-    selectSort(arr2, N);
-
-    //显示两个数组
-    print_array_int(arr1, N);
-    print_array_int(arr2, N);
-
-    //定义结果数组，存储相同元素
-    int result[MAX_LEN] = {0};
-    int size = 0;
-
-
+int find_commonElem_arrays(int *arr1, int len1, int *arr2, int len2, int *result) {
     //用两个指针遍历数组，如果相同就加入结果数组
+    int size = 0;
     int i = 0, j = 0;
-    while (i < N && j < N) {
+
+    while (i < len1 && j < len2) {
         if (arr1[i] < arr2[j]) {
             //前者小，往后跳
             ++i;
@@ -71,6 +46,46 @@ int main()
             ++j;
         }
     } 
+    return size;
+}
+
+int main()
+{
+    //在三个有序的数组中找到公共元素
+
+    //生成三个随机数组, 并初始化
+    srand(time(NULL)); 
+    int *arr1 = (int*)malloc(N * sizeof(int));
+    int *arr2 = (int*)malloc(N * sizeof(int));
+    int *arr3 = (int*)malloc(N * sizeof(int));
+ 
+    for (int i = 0; i < N; ++i) {
+        arr1[i] = rand() % M;
+        arr2[i] = rand() % M;
+        arr3[i] = rand() % M;
+    }
+
+    //对两个数组升序排列
+    selectSort(arr1, N);
+    selectSort(arr2, N);
+    selectSort(arr3, N);
+
+    //显示两个数组
+    print_array_int(arr1, N);
+    print_array_int(arr2, N);
+    print_array_int(arr3, N);
+
+    //定义结果数组，存储相同元素
+    int result[MAX_LEN] = {0};
+    int size = 0;
+
+    //临时数组，存储临时数据
+    int tmp[MAX_LEN] = {0};
+    int size_tmp = 0;
+
+    //使用两次函数找到三个有序数组的公共元素
+    size_tmp = find_commonElem_arrays(arr1, N, arr2, N, tmp);
+    size = find_commonElem_arrays(arr3, N, tmp, size_tmp, result);
 
     printf("两个数组的相同元素：");
     print_array_int(result, size);
@@ -78,5 +93,6 @@ int main()
     //释放动态申请的数组
     free(arr1);
     free(arr2);
+    free(arr3);
     return 0;
 }
