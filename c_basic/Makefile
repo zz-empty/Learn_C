@@ -1,16 +1,12 @@
 CC:=gcc
 srcs:=$(wildcard *.c)
 exe:=$(patsubst %.c, %, $(srcs))
-obj:=$(patsubst %.c, %.o, $(srcs))
 
 all: $(exe)
-
-%:%.o
-	$(CC) $< -o $@
-%.o:%.c
-	$(CC) -c $< -o $@
+%:%.c
+	$(CC) $^ -o $@
 
 .PHONY:clean rebuild
 clean:
-	$(RM) $(exe) $(obj)
+	$(RM) $(exe)
 rebuild: clean all
