@@ -6,5 +6,5 @@
 *.so
 *.dll
 
-/bin/
+./c_basic/bin/
 /build/
