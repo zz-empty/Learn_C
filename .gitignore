@@ -7,4 +7,5 @@
 *.dll
 
 /c_basic/bin/
+/c_basic/test/
 /build/
