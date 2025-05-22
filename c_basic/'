@@ -1,0 +1,93 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define STR_SIZE 1024
+
+void split_digits_letters(char *str) {
+    // 将一个字符串的数字和字母分开，数字在前，字母在后
+    // 用两个数组分别存储数字和字母
+    int len = strlen(str);
+    char *digest = (char*)malloc(len + 1);
+    char *letters = (char*)malloc(len + 1);
+
+    int d_idx = 0;
+    int l_idx = 0;
+    for (int i = 0; str[i] != '\0'; ++i) {
+        if (str[i] >= '0' && str[i] <= '9') {
+            digest[d_idx++] = str[i]; 
+        } else {
+            letters[l_idx++] = str[i];
+        }
+    }
+
+    digest[d_idx] = '\0';
+    letters[l_idx] = '\0';
+    strcpy(str, digest);
+    strcat(str, letters);
+
+    free(digest);
+    free(letters);
+}
+
+void replace_space(char *str) {
+    // 将空格替换成%020
+    // 有越界风险，确保str不会访问越界
+
+    int len = strlen(str);
+    char *tmp = (char*)malloc(2 * len);
+    int t_idx = 0;
+
+    for (int i = 0; str[i] != '\0'; ++i) {
+        if (' ' == str[i]) {
+            tmp[t_idx++] = '%';
+            tmp[t_idx++] = '0';
+            tmp[t_idx++] = '2';
+            tmp[t_idx++] = '0';
+        } else {
+            tmp[t_idx++] = str[i];
+        }
+    }
+
+    tmp[t_idx] = '\0';
+    strcpy(str, tmp); 
+}
+
+void remove_char(char *str, char c) {
+    // 移除字符串中的某个字符
+    int cnt = 0;
+    int len = strlen(str);
+    char *tmp = (char*)malloc(len + 1);
+    for (int i = 0; str[i] != '0'; ++i) {
+        if (c == str[i]) {
+            ++cnt;
+        } else {
+            str[i - cnt] = str[i];
+        }
+    }
+
+    str[strlen(str) - cnt] = '\0';
+}
+
+int main()
+{
+    
+    // 读取一个字符串
+    printf("请输入一个字符串(数字+字母）：");
+    char str[STR_SIZE] = "";
+    fgets(str, STR_SIZE, stdin);
+    str[strlen(str) - 1] = '\0';
+    puts(str);
+
+    /* // 分离数字和字母 */
+    /* split_digits_letters(str); */
+    /* puts(str); */
+
+    /* // 替换空格为%020 */
+    /* replace_space(str); */
+    /* puts(str); */ 
+
+    // 移除某个字符
+    remove_char(str, 'a');
+    puts(str);
+}
