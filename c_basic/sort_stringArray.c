@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #define N 10
@@ -49,6 +50,19 @@ void print_indexs(char **p, int len) {
     printf("--------------------------------\n");
 }
 
+int compare_str(const void *p1, const void *p2) {
+    const char *s1 = (char*)p1;
+    const char *s2 = (char*)p2;
+    return strcmp(s1, s2);
+}
+
+int compare_index(const void *p1, const void *p2) {
+    const char *s1 = *(char**)p1;
+    const char *s2 = *(char**)p2;
+    return strcmp(s1, s2);
+}
+
+
 int main() {
     char strs[N][STR_SIZE] = {
         "string",
@@ -64,15 +78,22 @@ int main() {
     };
 
     /* sort_strArray(strs, N); */
-    /* print_arrays(strs, N); */
+    print_arrays(strs, N);
     
-    // 建立索引
+#if 1
+    // 建立索引, 使用索引排序
     char* indexs[N];
     for (int i = 0; i < N; ++i) {
         indexs[i] = strs[i];
     }
 
-    sort_strIndex(indexs, N);
+    /* sort_strIndex(indexs, N); */
+    /* print_indexs(indexs, N); */
+    /* print_arrays(strs, N); */
+#endif
+
+    /* qsort(strs, N, STR_SIZE, compare_str); */    
+    qsort(indexs, N, sizeof(char*), compare_index);    
     print_indexs(indexs, N);
     print_arrays(strs, N);
 }

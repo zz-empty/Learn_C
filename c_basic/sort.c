@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define SIZE 1000000
-/* #define SIZE 100000000 */
+/* #define SIZE 1000000 */
+#define SIZE 300000000
 #define MAX 100
 
 // 生成一个随机数组
@@ -93,10 +93,10 @@ void shell_sort(int *arr, int len) {
 
 int sort_time(int *arr, int len) {
     time_t begin = time(NULL);
-    /* shell_sort(arr, len); */
+    shell_sort(arr, len);
     /* bubble_sort(arr, len); */
     /* select_sort(arr, len); */
-    insert_sort(arr, len);
+    /* insert_sort(arr, len); */
     time_t end = time(NULL);
     return end - begin;
 }
