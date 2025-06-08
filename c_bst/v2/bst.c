@@ -43,8 +43,8 @@ TreeNode* right_rotate(TreeNode *x) {
     x->left = B;
 
     // 更新高度
-    update_height(y);
     update_height(x);
+    update_height(y);
 
     return y;   // 返回新的根节点
 }
@@ -59,8 +59,8 @@ TreeNode* left_rotate(TreeNode *x) {
     x->right = B;
 
     // 更新高度
-    update_height(y);
     update_height(x);
+    update_height(y);
     
     return y;   // 返回新的根节点
 }
@@ -89,33 +89,132 @@ TreeNode* balance_node(TreeNode *node) {
         return right_rotate(node);
     }
 
-    // RL 
+    // RL 右左失衡：先右旋右子树再左旋  右腰子型
+    if (bf < -1 && balance_factor(node->right) > 0) {
+        node->right = right_rotate(node->right);
+        return left_rotate(node);
+    }
+
+    return node;    // 平衡状态，无需旋转
 }
 
 // 插入节点（带平衡）
-TreeNode* insert_node(TreeNode *root, int value);
+TreeNode* insert_node(TreeNode *root, int value) {
+    if (!root) {
+        return create_node(value);
+    }
+
+    if (value < root->data) {
+        root->left = insert_node(root->left, value);
+    } else if (value > root->data) {
+        root->right = insert_node(root->right, value);
+    } else {
+        return root;    // 重复值不插入
+    }
+
+    return balance_node(root);  // 插入后平衡
+}
 
 // 查找最小值节点（用于删除操作）
-TreeNode* find_minNode(TreeNode *node);
+TreeNode* find_minNode(TreeNode *node) {
+    while (node && node->left) {
+        node = node->left;
+    }
+    return node;
+}
 
 // 删除节点
-TreeNode* deletee_node(TreeNode *root, int value);
+TreeNode* delete_node(TreeNode *root, int value) {
+    if (!root) return NULL;
+
+    if (value < root->data) {
+        root->left = delete_node(root->left, value);
+    } else if (value > root->data) {
+        root->right = delete_node(root->right, value);
+    } else {
+        // 找到目标节点
+        // 情况1: 只有一个子树，或没有子树
+        if (!root->left) {
+            TreeNode *temp = root->right;
+            free(root);
+            return temp;
+        } else if (!root->right) {
+            TreeNode *temp = root->left;
+            free(root);
+            return temp;
+        } 
+
+        // 情况2：有两个子树
+        TreeNode *temp = find_minNode(root->right);
+        root->data = temp->data;
+        root->right = delete_node(root->right, temp->data);
+    }
+
+    return balance_node(root);  // 删除后平衡
+}
 
 // 查找节点（递归实现）
-TreeNode* search_node(TreeNode *root, int value);
+TreeNode* search_node(TreeNode *root, int value) {
+    if (!root || root->data == value) return NULL;
+
+    if (value < root->data) {
+        return search_node(root->left, value);
+    } else {
+        return search_node(root->right, value);
+    } 
+}
 
 // 修改节点值（先删后插）
-void update_node(TreeNode **root, int old_value, int new_value);
+void update_node(TreeNode **root, int old_value, int new_value) {
+    *root = delete_node(*root, old_value);
+    *root = insert_node(*root, new_value);
+}
 
 // 中序遍历（验证BST性质）
-void inorder_traversal(TreeNode *root);
+void inorder_traversal(TreeNode *root) {
+    if (root) {
+        inorder_traversal(root->left);
+        printf("%3d(h=%d)", root->data, root->height);
+        inorder_traversal(root->right);
+    }
+}
 
 // 层次遍历(可视化树结构)
-void level_order_traversal(TreeNode *root);
+void level_order_traversal(TreeNode *root) {
+    if (!root) return; 
+
+#define MAX_SIZE 100
+    TreeNode *queue[MAX_SIZE];
+    int front = 0;  // 队头
+    int rear = 0;   // 队尾的下一个
+
+    queue[rear++] = root;
+
+    // 只要队列中有元素，就进入循环
+    while (front < rear) {
+        int level_size = rear - front;
+        for (int i = 0; i < level_size; ++i) {
+            TreeNode *node = queue[front++];    // 取队头 
+            printf("%3d", node->data);
+
+            if (node->left) queue[rear++] = node->left;
+            if (node->right) queue[rear++] = node->right;
+        }
+        printf("\n");
+    }
+}
 
 // 释放二叉树内存
-void free_tree(TreeNode *root);
+void free_tree(TreeNode *root) {
+    if (root) {
+        free_tree(root->left);
+        free_tree(root->right);
+        free(root);
+    }
+}
 
 // 打印二叉搜索树
-void print_tree(TreeNode *root);
+void print_tree(TreeNode *root) {
+
+}
 

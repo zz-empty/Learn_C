@@ -40,7 +40,7 @@ TreeNode* insert_node(TreeNode *root, int value);
 TreeNode* find_minNode(TreeNode *node);
 
 // 删除节点
-TreeNode* deletee_node(TreeNode *root, int value);
+TreeNode* delete_node(TreeNode *root, int value);
 
 // 查找节点（递归实现）
 TreeNode* search_node(TreeNode *root, int value);
