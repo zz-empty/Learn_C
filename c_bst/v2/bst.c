@@ -1,5 +1,6 @@
-#include "avl.h"
-#include <cmath>
+#include "bst.h"
+#include <complex.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 // 创建新节点
@@ -27,18 +28,69 @@ void update_height(TreeNode *node) {
     }
 }
 
-// 计算平衡因子
+// 计算平衡因子（左子树高 - 右子树高）
 int balance_factor(TreeNode *node) {
-    
+    return node ? (height(node->left) - height(node->right)) : 0;
 }
 
 // 右旋
-TreeNode* right_rotate(TreeNode *x);
-// 左旋
-TreeNode* left_rotate(TreeNode *x);
+TreeNode* right_rotate(TreeNode *x) {
+    TreeNode *y = x->left;
+    TreeNode *B = y->right;
 
-// 平衡因子
-TreeNode* balance_node(TreeNode *node);
+    // 执行旋转
+    y->right = x;
+    x->left = B;
+
+    // 更新高度
+    update_height(y);
+    update_height(x);
+
+    return y;   // 返回新的根节点
+}
+
+// 左旋
+TreeNode* left_rotate(TreeNode *x) {
+    TreeNode *y = x->right;
+    TreeNode *B = y->left;
+
+    // 执行旋转
+    y->left = x;
+    x->right = B;
+
+    // 更新高度
+    update_height(y);
+    update_height(x);
+    
+    return y;   // 返回新的根节点
+}
+
+// 平衡节点（根据平衡因子选择旋转方式）
+TreeNode* balance_node(TreeNode *node) {
+    if (!node) return node;
+
+    // 更新当前节点高度
+    update_height(node);
+    int bf = balance_factor(node);
+
+    // LL 左左失衡：右旋   左裙子型
+    if (bf > 1 && balance_factor(node->left) >= 0) {
+        return right_rotate(node); 
+    }
+
+    // RR 右右失衡：左旋   右裙子型
+    if (bf < -1 && balance_factor(node->right) <= 0) {
+        return left_rotate(node);
+    }
+
+    // LR 左右失衡：先左旋左子树再右旋   左腰子型
+    if (bf > 1 && balance_factor(node->left) < 0) {
+        node->left = left_rotate(node->left);
+        return right_rotate(node);
+    }
+
+    // RL 
+}
 
 // 插入节点（带平衡）
 TreeNode* insert_node(TreeNode *root, int value);

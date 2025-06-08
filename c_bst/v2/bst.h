@@ -15,6 +15,24 @@ typedef struct TreeNode {
 // 创建新节点
 TreeNode* create_node(int value);
 
+// 计算节点高度
+int height(TreeNode *node);
+
+// 更新节点高度
+void update_height(TreeNode *node);
+
+// 计算平衡因子 （左子树高 - 右子树高）
+int balance_factor(TreeNode *node);
+
+// 右旋
+TreeNode* right_rotate(TreeNode *x);
+
+// 左旋
+TreeNode* left_rotate(TreeNode *x);
+
+// 平衡因子
+TreeNode* balance_node(TreeNode *node);
+
 // 插入节点（带平衡）
 TreeNode* insert_node(TreeNode *root, int value);
 
@@ -42,21 +60,5 @@ void free_tree(TreeNode *root);
 // 打印二叉搜索树
 void print_tree(TreeNode *root);
 
-// 计算节点高度
-int height(TreeNode *node);
-
-// 更新节点高度
-void update_height(TreeNode *node);
-
-// 计算平衡因子
-int balance_factor(TreeNode *node);
-
-// 右旋
-TreeNode* right_rotate(TreeNode *x);
-// 左旋
-TreeNode* left_rotate(TreeNode *x);
-
-// 平衡因子
-TreeNode* balance_node(TreeNode *node);
 
 #endif
