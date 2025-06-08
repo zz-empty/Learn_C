@@ -1,3 +1,4 @@
+# 将每个.c文件都生成一个对应的可执行文件，放在./bin目录里
 CC := gcc
 srcs := $(wildcard *.c)
 exe := $(addprefix bin/, $(basename $(srcs)))

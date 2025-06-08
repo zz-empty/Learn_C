@@ -21,9 +21,8 @@ typedef struct List {
 
 // 初始化链表
 void initList(pList_t pL);
-// 释放链表的所有节点
-void free_all_node(pList_t pL);
-
+// 释放链表
+void destoryList(pList_t pL);
 // 获取链表大小
 int size_list(pList_t pL);
 // 头插法
@@ -36,5 +35,7 @@ void sortInsert(pList_t pL, pNode_t pNew);
 void printList(pList_t pL);
 // 删除结点, 按位删除
 void deleteNode(pList_t pL, int pos);
+
+
 
 #endif

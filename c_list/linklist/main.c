@@ -1,4 +1,12 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "mylist.h"
+
+// 使用len个随机元素初始化链表
+void initList_random(pList_t pL, int len, int r);
+// 合并有序链表
+pList_t mergeList(pList_t l1, pList_t l2);
 
 void test1()
 {

@@ -8,15 +8,16 @@ void initList(pList_t pL) {
     memset(pL, 0, sizeof(List_t));
 }
 
-// 释放链表所有节点
-void free_all_node(pList_t pL) {
+// 释放链表
+void destoryList(pList_t pL) {
     // 释放所有节点
     while (pL->pHead) {
         pNode_t tmp = pL->pHead;
         pL->pHead = tmp->pNext;
         free(tmp);
     }
-    pL->pHead = pL->pTail = NULL;
+    free(pL);
+    pL = NULL;
 }
 
 // 获取链表大小

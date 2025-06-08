@@ -1,7 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <time.h>
 
 #define SIZE 30
 #define MAX 100
@@ -9,14 +7,15 @@
 
 int* random_arr(int len, int max);
 void print_arr(int *arr, int len);
+
 int compare(const void *p1, const void *p2);
 int patition(int *arr, int left, int right);
 int find_k_quick(int *arr, int left, int right, int k);
 void adjustMinHeap(int *arr, int pos, int len);
 int find_k_heap(int *arr, int len, int k);
 
-
 int main() {
+    // 生成一个随机数组
     int *arr = random_arr(SIZE, MAX);
     print_arr(arr, SIZE);
 
@@ -77,25 +76,6 @@ void adjustMinHeap(int *arr, int pos, int len) {
     }
 }
 
-
-// 生成一个随机数组
-int* random_arr(int len, int max) {
-    srand(time(NULL));
-    int *arr = (int*)malloc(len * sizeof(int));
-
-    for (int i = 0; i < len; ++i) {
-        arr[i] = rand() % max;
-    }
-    return arr;
-}
-
-// 打印int数组
-void print_arr(int *arr, int len) {
-    for (int i = 0; i < len; ++i) {
-        printf("%3d", arr[i]);
-    }
-    printf("\n");
-}
 
 // qsort参数
 int compare(const void *p1, const void *p2) {

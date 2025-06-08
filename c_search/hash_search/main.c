@@ -1,32 +1,13 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <time.h>
 
 #define SIZE 20
 #define MAX 100
 #define MAXKEY 1000
 #define SWAP_INT(a, b) {int tmp = a; a = b; b = tmp;} 
 
-// 生成一个随机数组
-int* random_arr(int len, int max) {
-    srand(time(NULL));
-    int *arr = (int*)malloc(len * sizeof(int));
-
-    for (int i = 0; i < len; ++i) {
-        arr[i] = rand() % max;
-    }
-    return arr;
-}
-
-// 打印int数组
-void print_arr(int *arr, int len) {
-    for (int i = 0; i < len; ++i) {
-        printf("%3d", arr[i]);
-    }
-    printf("\n");
-}
-
+int* random_arr(int len, int max);
+void print_arr(int *arr, int len);
 
 // qsort的参数
 int compare(const void *p1, const void *p2) {
