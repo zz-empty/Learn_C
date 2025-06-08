@@ -1,7 +1,7 @@
 # 生成一个可执行文件
 CC := gcc
 srcs := $(wildcard *.c)
-exe := main
+exe := main.out
 
 
 # 生成规则（添加目录依赖）
