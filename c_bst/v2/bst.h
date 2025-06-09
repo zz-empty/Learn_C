@@ -37,7 +37,7 @@ TreeNode* balance_node(TreeNode *node);
 TreeNode* insert_node(TreeNode *root, int value);
 
 // 查找最小值节点（用于删除操作）
-TreeNode* find_minNode(TreeNode *node);
+TreeNode* tree_minimum(TreeNode *node);
 
 // 删除节点
 TreeNode* delete_node(TreeNode *root, int value);

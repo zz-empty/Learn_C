@@ -1,0 +1,88 @@
+#include "rbtree.h"
+#include <stdlib.h>
+// 删除节点
+void rb_delete(RBTree *tree, int key) {
+    RBNode *z = tree->root;
+    
+    // 查找要删除的节点
+    while (z != tree->nil) {
+        if (key == z->key) break;
+        if (key < z->key) z = z->left;
+        else z = z->right;
+    }
+    
+    if (z == tree->nil) return; // 未找到节点
+    
+    RBNode *y = z;
+    Color y_original_color = y->color;
+    RBNode *x;
+    
+    // 如果z没有左子节点
+    if (z->left == tree->nil) {
+        x = z->right;
+        // 用右子节点替换z
+        if (z->parent == tree->nil) {
+            tree->root = x;
+        } else if (z == z->parent->left) {
+            z->parent->left = x;
+        } else {
+            z->parent->right = x;
+        }
+        x->parent = z->parent;
+    // 如果z没有右子节点
+    } else if (z->right == tree->nil) {
+        x = z->left;
+        // 用左子节点替换z
+        if (z->parent == tree->nil) {
+            tree->root = x;
+        } else if (z == z->parent->left) {
+            z->parent->left = x;
+        } else {
+            z->parent->right = x;
+        }
+        x->parent = z->parent;
+    // 如果z有两个子节点
+    } else {
+        // z有两个子节点，找到后继节点
+        y = tree_minimum(tree, z->right);
+        y_original_color = y->color;
+        x = y->right;
+        
+        if (y->parent == z) {
+            x->parent = y;
+        } else {
+            // 用y的右子节点替换y
+            if (y->parent == tree->nil) {
+                tree->root = x;
+            } else if (y == y->parent->left) {
+                y->parent->left = x;
+            } else {
+                y->parent->right = x;
+            }
+            x->parent = y->parent;
+            
+            y->right = z->right;
+            y->right->parent = y;
+        }
+        
+        // 用y替换z
+        if (z->parent == tree->nil) {
+            tree->root = y;
+        } else if (z == z->parent->left) {
+            z->parent->left = y;
+        } else {
+            z->parent->right = y;
+        }
+        y->parent = z->parent;
+        
+        y->left = z->left;
+        y->left->parent = y;
+        y->color = z->color;
+    }
+    
+    if (y_original_color == BLACK) {
+        delete_fixup(tree, x);
+    }
+    
+    free(z);
+}

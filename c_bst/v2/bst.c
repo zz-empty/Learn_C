@@ -116,7 +116,7 @@ TreeNode* insert_node(TreeNode *root, int value) {
 }
 
 // 查找最小值节点（用于删除操作）
-TreeNode* find_minNode(TreeNode *node) {
+TreeNode* tree_minimum(TreeNode *node) {
     while (node && node->left) {
         node = node->left;
     }
@@ -145,7 +145,7 @@ TreeNode* delete_node(TreeNode *root, int value) {
         } 
 
         // 情况2：有两个子树
-        TreeNode *temp = find_minNode(root->right);
+        TreeNode *temp = tree_minimum(root->right);
         root->data = temp->data;
         root->right = delete_node(root->right, temp->data);
     }
