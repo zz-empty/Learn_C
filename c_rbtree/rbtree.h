@@ -64,4 +64,7 @@ int verify_rbtree(RBTree *tree);
 // 释放红黑树节点
 void free_rbtree(RBTree *tree, RBNode *node);
 
+// 层次遍历
+void level_order_traversal(RBTree *tree, RBNode *root);
+
 #endif

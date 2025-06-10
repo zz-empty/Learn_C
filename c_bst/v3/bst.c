@@ -8,30 +8,12 @@ TreeNode* create_node(int value) {
     TreeNode *new_node = (TreeNode*)malloc(sizeof(TreeNode));
     if (new_node) {
         new_node->data = value;
-        new_node->height = 1;   // 新节点高度为1
         new_node->left = new_node->right = NULL;
     }
     return new_node;
 }
 
-// 计算节点高度
-int height(TreeNode *node) {
-    return node ? node->height : 0;
-}
 
-// 更新节点高度
-void update_height(TreeNode *node) {
-    if (node) {
-        int left_height = height(node->left);
-        int right_height = height(node->right);
-        node->height = (left_height > right_height ? left_height : right_height) + 1;
-    }
-}
-
-// 计算平衡因子（左子树高 - 右子树高）
-int balance_factor(TreeNode *node) {
-    return node ? (height(node->left) - height(node->right)) : 0;
-}
 
 // 右旋
 TreeNode* right_rotate(TreeNode *x) {
@@ -40,79 +22,64 @@ TreeNode* right_rotate(TreeNode *x) {
 
     // 执行旋转
     y->right = x;
+    x->parent = y;
     x->left = B;
-
-    // 更新高度
-    update_height(x);
-    update_height(y);
+    if (B) B->parent = x;
 
     return y;   // 返回新的根节点
 }
 
-// 左旋
+// 左旋  右节点替换
+//    x
+//       y
+//     B
+// y一定存在，B不一定存在
 TreeNode* left_rotate(TreeNode *x) {
     TreeNode *y = x->right;
     TreeNode *B = y->left;
 
     // 执行旋转
     y->left = x;
+    x->parent = y;
     x->right = B;
+    if (B) B->parent = x;
 
-    // 更新高度
-    update_height(x);
-    update_height(y);
-    
     return y;   // 返回新的根节点
 }
 
-// 平衡节点（根据平衡因子选择旋转方式）
-TreeNode* balance_node(TreeNode *node) {
-    if (!node) return node;
-
-    // 更新当前节点高度
-    update_height(node);
-    int bf = balance_factor(node);
-
-    // LL 左左失衡：右旋   左裙子型
-    if (bf > 1 && balance_factor(node->left) >= 0) {
-        return right_rotate(node); 
-    }
-
-    // RR 右右失衡：左旋   右裙子型
-    if (bf < -1 && balance_factor(node->right) <= 0) {
-        return left_rotate(node);
-    }
-
-    // LR 左右失衡：先左旋左子树再右旋   左腰子型
-    if (bf > 1 && balance_factor(node->left) < 0) {
-        node->left = left_rotate(node->left);
-        return right_rotate(node);
-    }
-
-    // RL 右左失衡：先右旋右子树再左旋  右腰子型
-    if (bf < -1 && balance_factor(node->right) > 0) {
-        node->right = right_rotate(node->right);
-        return left_rotate(node);
-    }
-
-    return node;    // 平衡状态，无需旋转
-}
 
 // 插入节点（带平衡）
 TreeNode* insert_node(TreeNode *root, int value) {
-    if (!root) {
-        return create_node(value);
+    TreeNode *node = create_node(value);
+
+    TreeNode *y = NULL;
+    TreeNode *cur = root;
+
+    // 查找插入位置
+    while (cur) {
+        y = cur;
+        if (value < cur->data) {
+            cur = cur->left;
+        } else if (value > cur->data) {
+            cur = cur->right;
+        } else {
+            return NULL;    // 重复值不处理
+        }
     }
 
-    if (value < root->data) {
-        root->left = insert_node(root->left, value);
-    } else if (value > root->data) {
-        root->right = insert_node(root->right, value);
+
+    if (y == NULL) {
+        return node;
+    }
+    // 将新节点挂到y下
+    if (value < y->data) {
+        y->left = node;
     } else {
-        return root;    // 重复值不插入
+        y->right = node;
     }
+    node->parent = y;
 
-    return balance_node(root);  // 插入后平衡
+    return root;
 }
 
 // 查找最小值节点（用于删除操作）
@@ -150,7 +117,7 @@ TreeNode* delete_node(TreeNode *root, int value) {
         root->right = delete_node(root->right, temp->data);
     }
 
-    return balance_node(root);  // 删除后平衡
+    return root; 
 }
 
 // 查找节点（递归实现）
@@ -174,11 +141,12 @@ void update_node(TreeNode **root, int old_value, int new_value) {
 void inorder_traversal(TreeNode *root) {
     if (root) {
         inorder_traversal(root->left);
-        printf("%3d(h=%d)", root->data, root->height);
+        printf("%3d", root->data);
         inorder_traversal(root->right);
     }
 }
 
+#if 1
 // 层次遍历(可视化树结构)
 void level_order_traversal(TreeNode *root) {
     if (!root) return; 
@@ -203,6 +171,8 @@ void level_order_traversal(TreeNode *root) {
         printf("\n");
     }
 }
+#endif
+
 
 // 释放二叉树内存
 void free_tree(TreeNode *root) {

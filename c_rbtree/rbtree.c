@@ -140,6 +140,7 @@ void insert_fixup(RBTree *tree, RBNode *z) {
 void rb_insert(RBTree *tree, int key) {
     // 创建节点
     RBNode *z = create_node(key);
+    z->left = z->right = tree->nil;
 
     // 查找插入位置
     RBNode *y = tree->nil;      // 插入位置的父结点
@@ -168,8 +169,7 @@ void rb_insert(RBTree *tree, int key) {
         y->right = z;
     }
 
-    // 设置新节点的左右子节点，颜色为红色
-    z->left = z->right = tree->nil;
+    // 设置新节点的颜色为红色
     z->color = RED;
 
     // 调整树的结构，使其满足红黑树的性质
@@ -311,8 +311,7 @@ void rb_delete(RBTree *tree, int key) {
         y_original_color = y->color;
         x = y->right;   // 最小后继的右节点
 
-#if 1
-        // 将y从原有结构中摘除
+        // 将y从原有结构中摘除, 然后y挂到z的右子树
         if (z == y->parent) {
             // y是z的直接子节点
             x->parent = y;
@@ -327,30 +326,10 @@ void rb_delete(RBTree *tree, int key) {
             }
             x->parent = y->parent;
 
-            // 将y挂到z的右子树
+            // 将z的右子树挂到y的右边
             y->right = z->right;
             y->right->parent = y;
         } 
-#else 
-        // 修复后代码
-        if (y != z->right) {  // 正确：检查y是否是z的直接右子节点
-                              // 用x替换y的位置
-            if (y->parent == tree->nil) {
-                tree->root = x;
-            } else if (y == y->parent->left) {
-                y->parent->left = x;
-            } else {
-                y->parent->right = x;
-            }
-            x->parent = y->parent;  // 正确设置x的父指针
-
-            // 将y连接到z的右子树（不覆盖原有子树）
-            y->right = z->right;
-            y->right->parent = y;
-        } else {
-            x->parent = y;  // 直接右子节点的特殊情况
-        }  
-#endif
 
         // 用y替换z
         if (z->parent == tree->nil) {
@@ -443,4 +422,26 @@ void free_rbtree(RBTree *tree, RBNode *node) {
     free_rbtree(tree, node->left);
     free_rbtree(tree, node->right);
     free(node);
+}
+
+// 层次遍历, 不完善，可以用循环队列改进
+void level_order_traversal(RBTree *tree, RBNode *root) {
+    if (!root) return;
+    // 使用辅助队列
+    RBNode *queue[100];
+    int front = 0;  // 指向队头 
+    int rear = 0;   // 只想队尾的下一个位置
+    queue[rear++] = root;
+
+    while (front < rear) {
+        int level_size = rear - front;
+        for (int i = 0; i < level_size; ++i) {
+            // 打印元素的值，然后将它的孩子节点加入队列
+            RBNode *node = queue[front++];
+            printf("%3d(%s)", node->key, node->color == RED ? "R" : "B");
+            if (node->left != tree->nil) queue[rear++] = node->left;
+            if (node->right != tree->nil) queue[rear++] = node->right;
+        }
+        printf("\n");
+    }
 }
