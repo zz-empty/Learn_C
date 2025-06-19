@@ -1,6 +1,5 @@
 #include "stu.h"
 #include <stdio.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -114,7 +113,7 @@ void saveList(const char *filename, List *list) {
 
   qsort(arr, list->size, sizeof(Stu *), compare_stu);
 
-#if OFF
+#if ON
   // 测试排序是否正确
   printf("-----------------qsort_arr\n");
   for (int i = 0; i < list->size; ++i) {
@@ -123,15 +122,16 @@ void saveList(const char *filename, List *list) {
 #endif
 
   // 将链表写回文件
-  FILE *fp_w = (FILE *)fopen(filename, "w");
+  FILE *fp_w = (FILE *)fopen(filename, "w+");
 
-  p = list->pHead;
-  while (p) {
-    fprintf(fp_w, "%s\t%s\t%s\t%5.2f\t%5.2f\t%5.2f\t%5.2f\n", p->id, p->name,
-            p->gender == Famale ? "女" : "男", p->scores[0], p->scores[1],
-            p->scores[2], p->total_score);
-    p = p->next;
+  // 遍历索引数组，取出数据放入文件
+  for (int i = 0; i < list->size; ++i) {
+    fprintf(fp_w, "%5.2f\t%s\t%s\t%s\t%5.2f\t%5.2f\t%5.2f\n",
+            arr[i]->total_score, arr[i]->id, arr[i]->name,
+            arr[i]->gender == Famale ? "女" : "男", arr[i]->scores[0],
+            arr[i]->scores[1], arr[i]->scores[2]);
   }
+
   printf("写入成功！\n");
 
   fclose(fp_w);
